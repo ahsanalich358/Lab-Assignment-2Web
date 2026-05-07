@@ -1,0 +1,344 @@
+\documentclass[12pt,a4paper]{report}
+
+% ── Packages ──────────────────────────────────────────────
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{parskip}
+\usepackage{setspace}
+\usepackage{caption}
+\usepackage{listings}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{amsmath}
+
+% ── Hyperlink colours ─────────────────────────────────────
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!70!black,
+    urlcolor=blue!70!black,
+    citecolor=blue!70!black
+}
+
+% ── Code listing style ────────────────────────────────────
+\lstset{
+    basicstyle=\ttfamily\small,
+    backgroundcolor=\color{gray!10},
+    frame=single,
+    rulecolor=\color{gray!40},
+    breaklines=true,
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!50!black},
+    stringstyle=\color{red!70!black},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    numbersep=5pt
+}
+
+% ── Header / Footer ───────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\small CSC336 -- Web Technologies}
+\lhead{\small Lab Assignment 2}
+\rfoot{\thepage}
+\lfoot{\small COMSATS University Islamabad, Vehari Campus}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ── Section title formatting ──────────────────────────────
+\titleformat{\chapter}[display]
+  {\normalfont\Large\bfseries\centering}
+  {Chapter \thechapter}{12pt}{\large}
+\titlespacing*{\chapter}{0pt}{20pt}{15pt}
+
+\titleformat{\section}{\normalfont\large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalfont\normalsize\bfseries}{\thesubsection}{1em}{}
+
+% ── Line spacing ──────────────────────────────────────────
+\onehalfspacing
+
+% ══════════════════════════════════════════════════════════
+\begin{document}
+
+% ── Title Page ────────────────────────────────────────────
+\begin{titlepage}
+\centering
+\vspace*{0.5cm}
+
+{\Large\bfseries COMSATS University Islamabad, Vehari Campus\\[4pt]
+Pakistan}\\[0.4cm]
+
+{\normalsize Department of Computer Science}\\[0.6cm]
+
+\rule{\linewidth}{0.5pt}\\[0.3cm]
+{\large\bfseries Course: CSC336 -- Web Technologies}\\[0.2cm]
+{\large\bfseries Lab Assignment 2}\\[0.3cm]
+\rule{\linewidth}{0.5pt}\\[0.6cm]
+
+\textbf{GitHub Repository Link:}\\[0.2cm]
+\href{https://github.com/ahsanalich358/Lab-Assignment-2Web.git}{%
+\texttt{https://github.com/ahsanali/Web-Tech-Lab-Ass-02}}\\[0.4cm]
+
+
+\includegraphics[width=0.28\textwidth]{logo.png}\\[1.2cm]
+
+{\large\bfseries
+Building a Laravel-Based User Management System\\[4pt]
+with Full CRUD Functionality, Profile Image Handling,\\[4pt]
+and Email Search Feature}\\[0.8cm]
+
+{\normalsize by}\\[0.3cm]
+
+{\large\bfseries
+Ahsan Ali}\\[1.5cm]
+
+\begin{tabular}{ll}
+\textbf{Submitted By:} & Ahsan Ali\\[4pt]
+\textbf{Student ID:}   & CIIT/SP24-BSE-004/VHR\\[4pt]
+\textbf{Instructor:}   & Mam Yasmeen Jana\\[4pt]
+\textbf{Semester:}     & Spring 2026\\
+\end{tabular}
+
+\vfill
+{\small\textit{Department of Computer Science, COMSATS University Islamabad, Vehari Campus}}
+\end{titlepage}
+
+% ── Front Matter ──────────────────────────────────────────
+\pagenumbering{roman}
+
+% ── Abstract ──────────────────────────────────────────────
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+
+This report presents the design and implementation of a web-based User Management
+System developed using the Laravel PHP framework. The system is built following the
+Model--View--Controller (MVC) architectural pattern and provides a complete suite of
+CRUD (Create, Read, Update, Delete) operations for managing user records. Key
+features include profile image upload and storage, email-based filtering of records, and
+input validation with confirmation dialogs to prevent accidental data loss. The
+application is deployed locally using Laravel's built-in Artisan development server and
+uses MySQL as the backend database. The project demonstrates practical application
+of Laravel routing, Eloquent ORM, Blade templating, and form handling in a real-world
+web development scenario.
+
+\vspace{1cm}
+\textbf{Keywords:} Laravel, CRUD, MVC, PHP, User Management, Image Upload,
+Search, Blade Templates, Eloquent ORM, MySQL.
+
+% ── Abbreviations ─────────────────────────────────────────
+\chapter*{List of Abbreviations}
+\addcontentsline{toc}{chapter}{List of Abbreviations}
+
+\begin{tabularx}{\textwidth}{@{}lX@{}}
+\toprule
+\textbf{Abbreviation} & \textbf{Full Form} \\
+\midrule
+CRUD   & Create, Read, Update, Delete \\
+MVC    & Model--View--Controller \\
+PHP    & Hypertext Preprocessor \\
+HTML   & HyperText Markup Language \\
+CSS    & Cascading Style Sheets \\
+SQL    & Structured Query Language \\
+URL    & Uniform Resource Locator \\
+ORM    & Object Relational Mapping \\
+IDE    & Integrated Development Environment \\
+UI     & User Interface \\
+DB     & Database \\
+HTTP   & Hypertext Transfer Protocol \\
+REST   & Representational State Transfer \\
+CMD    & Command Prompt / Terminal \\
+\bottomrule
+\end{tabularx}
+% ── Main Content ──────────────────────────────────────────
+\clearpage
+\pagenumbering{arabic}
+
+% ══════════════════════════════════════════════════════════
+\chapter{Introduction and System Overview}
+% ══════════════════════════════════════════════════════════
+
+\section{Background and Motivation}
+
+Managing user data is a fundamental requirement in virtually every modern web
+application — ranging from academic portals and HR systems to e-commerce platforms
+and administrative dashboards. Traditional methods of record keeping, such as
+spreadsheets or paper-based forms, are inefficient, error-prone, and difficult to scale.
+Web-based systems built on robust frameworks provide a structured, maintainable, and
+scalable alternative.
+
+This project, \textbf{Building a Laravel-Based User Management System with Full
+CRUD Functionality, Profile Image Handling, and Email Search Feature}, is designed
+to address these challenges by implementing a complete user record management
+solution using the Laravel framework. Laravel's expressive syntax, built-in ORM
+(Eloquent), and Blade templating engine make it an ideal choice for rapid development
+of data-driven web applications.
+
+The system enables authorised users to register new records, browse all saved entries
+in a structured table, update existing information, and permanently remove records
+after explicit confirmation. Profile images can be attached to each user record, and a
+real-time email search allows quick retrieval of specific entries from potentially large
+datasets.
+
+\section{Tools and Technologies}
+
+Table~\ref{tab:tools} lists the tools and technologies selected for the development of
+this project. Each component was chosen based on compatibility, community support,
+and suitability for Laravel-based web development.
+
+\begin{table}[h!]
+\centering
+\caption{Tools and Technologies Used}
+\label{tab:tools}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{@{}llX@{}}
+\toprule
+\textbf{Tool / Technology} & \textbf{Version} & \textbf{Purpose} \\
+\midrule
+Laravel       & Latest (v11.x)   & Primary PHP framework; implements MVC architecture and handles routing, ORM, and views. \\
+PHP           & 8.x              & Server-side scripting language required to execute Laravel applications. \\
+Composer      & Latest           & PHP dependency manager used to install and manage Laravel packages. \\
+MySQL         & Latest           & Relational database used to persist user records, including image file paths. \\
+Blade         & Built-in         & Laravel's templating engine used to build dynamic HTML views and forms. \\
+Bootstrap 5   & 5.x              & Frontend CSS framework used to create a responsive, clean user interface. \\
+VS Code       & Latest           & Primary code editor used for writing and debugging the application. \\
+Git \& GitHub & Latest           & Version control and remote repository hosting for the project codebase. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Project Objectives}
+
+The core objectives guiding the design and development of this system are:
+
+\begin{itemize}[leftmargin=1.5cm]
+    \item \textbf{PO-1:} Design and implement a fully functional web application that
+    supports Create, Read, Update, and Delete operations on user records using the
+    Laravel MVC framework.
+
+    \item \textbf{PO-2:} Extend the base CRUD system with additional usability features
+    — specifically, profile image upload and display, email-based record search, and
+    input validation with user-confirmation prompts for destructive actions.
+
+    \item \textbf{PO-3:} Follow clean code and architectural conventions (MVC pattern,
+    RESTful routing, Eloquent ORM) to produce a maintainable and extensible codebase.
+\end{itemize}
+
+% ══════════════════════════════════════════════════════════
+\chapter{Implementation}
+% ══════════════════════════════════════════════════════════
+
+\section{Development Environment}
+
+The project was built and tested on a local Windows machine using the tools listed in
+Table~\ref{tab:devenv}.
+
+\begin{table}[h!]
+\centering
+\caption{Development Environment Setup}
+\label{tab:devenv}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{@{}llX@{}}
+\toprule
+\textbf{Component} & \textbf{Tool / Technology} & \textbf{Role} \\
+\midrule
+Backend Framework  & Laravel (v11.x) & MVC architecture, routing, ORM, validation. \\
+Programming Lang.  & PHP 8.x         & Server-side execution of Laravel code. \\
+Dependency Mgr.    & Composer        & Installs Laravel and all required packages. \\
+Database           & MySQL / SQLite  & Stores user records and image file paths. \\
+View Engine        & Blade + Bootstrap 5 & Dynamic UI pages: forms, tables, alerts. \\
+Code Editor        & Visual Studio Code & Writing, debugging, and managing files. \\
+Local Server       & Laravel Artisan & Runs the application via \texttt{php artisan serve}. \\
+Version Control    & Git + GitHub    & Tracks code changes and hosts the repository. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Project Setup and Execution}
+
+To run the project on a local machine, execute the following steps in the terminal
+from inside the project root directory:
+
+\begin{lstlisting}[language=bash, caption={Project Setup Commands}]
+# Step 1 – Install all PHP dependencies
+composer install
+
+# Step 2 – Copy environment file and set the database credentials
+cp .env.example .env
+# Edit .env:  DB_DATABASE=your_db  DB_USERNAME=root  DB_PASSWORD=
+
+# Step 3 – Generate application key
+php artisan key:generate
+
+# Step 4 – Run database migrations to create the table
+php artisan migrate
+
+# Step 5 – Create the uploads directory (if not present)
+mkdir public/uploads
+
+# Step 6 – Start the local development server
+php artisan serve
+\end{lstlisting}
+
+After the server starts, open \texttt{http://127.0.0.1:8000} in any browser to
+access the application.
+
+\section{Core Implementation Details}
+
+\subsection{CRUD Operations}
+
+All CRUD operations are implemented through Laravel's resourceful routing and a
+dedicated \texttt{UserController}. The key controller methods are:
+
+\begin{itemize}[leftmargin=1.5cm]
+    \item \textbf{index():} Retrieves all user records (with optional email filter)
+    and passes them to the \texttt{users/index} Blade view.
+    \item \textbf{create():} Returns the \texttt{users/create} registration form view.
+    \item \textbf{store():} Validates incoming form data, handles the image upload,
+    and persists a new record to the database.
+    \item \textbf{edit(\$id):} Retrieves the specified user record and populates the
+    edit form view.
+    \item \textbf{update(\$id):} Validates and saves changes to the selected user record; replaces the image if a new file is uploaded.
+
+  \includegraphics[width=0.9\textwidth]{1.png}
+  
+  \includegraphics[width=0.9\textwidth]{2.png}
+  
+  \includegraphics[width=0.9\textwidth]{3.png}
+  
+  \includegraphics[width=0.9\textwidth]{4.png}
+  
+  \includegraphics[width=0.9\textwidth]{5.png}
+% ══════════════════════════════════════════════════════════
+\chapter*{Conclusion}
+\addcontentsline{toc}{chapter}{Conclusion}
+% ══════════════════════════════════════════════════════════
+
+This lab assignment successfully demonstrates the practical implementation of a
+web-based User Management System using the Laravel PHP framework. The application
+covers all four CRUD operations in a clean, maintainable codebase structured
+according to the MVC design pattern. Additional features — email-based search,
+profile image upload and display, server-side input validation, and JavaScript
+confirmation dialogs — extend the system beyond a basic data-entry tool into a
+usable, real-world application component.
+
+Key learning outcomes achieved through this project include:
+\begin{itemize}[leftmargin=1.5cm]
+    \item Hands-on experience with Laravel routing, controllers, models, and
+    Blade views.
+    \item Practical understanding of Eloquent ORM for database interactions.
+    \item Implementation of file upload handling in a PHP/Laravel context.
+    \item Application of server-side validation and flash messaging for user feedback.
+    \item Use of Git and GitHub for version control throughout the development cycle.
+\end{itemize}
+
+The project can be extended in future work by adding user authentication,
+role-based access control, pagination, export to CSV/PDF, and deployment to a
+cloud hosting platform.
+\end{document}
